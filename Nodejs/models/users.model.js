@@ -52,26 +52,9 @@ var userSchema = new Schema({
         max: 255,
     },
 
-    StudentFullName: {
-        type: String,
-        required: true,
-        min: 6,
-        max: 255
-    },
-
-    schoolCode: {
+    student: {
         type: String,
         required: false,
-    },
-
-    classCode: {
-        type: String,
-        required: false,
-    },
-
-    decentralization: {
-        type: Number,
-        required: true,    
     },
 
     token: [{
@@ -86,15 +69,17 @@ var userSchema = new Schema({
 });
 
 userSchema.pre('save', async function(next) {
-    console.log('save ne');
-    console.log(this.password);
     if(this.isModified('password')) {
         this.password = await bcrypt.hash(this.password, 8)
-        console.log(this.password);
 
     }
     next()
 })
+
+userSchema.statics.password = async function(password) {
+    const passwd = await bcrypt.hash(password, 8)
+    return passwd
+}
 
 userSchema.methods.generateAuthToken = async function(tokenDevices) {
     const token = jwt.sign({ _id: this._id }, JWT_KEY)

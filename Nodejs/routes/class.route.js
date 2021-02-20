@@ -5,6 +5,8 @@ const controller = require('../controllers/class.controller')
 
 Router.get("/", controller.showClass)
 
+Router.get("/id/:id", controller.showClassById);
+
 Router.post('/create', controller.createClass)
 
 Router.post('/edit', controller.editClass)

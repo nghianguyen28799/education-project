@@ -3,10 +3,14 @@ const Router = express.Router()
 
 const controller = require('../controllers/users.controller')
 
-Router.post("/register", controller.register)
+Router.post("/create", controller.create)
+
+Router.post("/edit", controller.edit)
+
+Router.post("/delete", controller.delete)
 
 Router.post("/login", controller.login)
 
-Router.get("/test", controller.test)
+Router.get("/", controller.showUsers)
 
 module.exports = Router;

@@ -13,7 +13,7 @@ const classSchema = new Schema({
         required: true,
     },
     Teacher: {
-        type: Object,
+        type: String,
         required: true
     },
 })

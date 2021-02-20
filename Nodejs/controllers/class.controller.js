@@ -9,6 +9,14 @@ module.exports = {
         })
     },
 
+    showClassById: (req, res) => {
+        const id = req.params.id
+        Class.find({_id: id})
+        .then(data => {
+            res.send(data);
+        })
+    },
+
     createClass: async(req, res) => {
         const data = {
             ClassCode: req.body.classCode,
@@ -34,7 +42,7 @@ module.exports = {
             Room: req.body.room,
             Teacher: req.body.teacher,
         }
-        console.log(action);
+      
         await Class.updateOne(condition, action)
         .then(() => {
             res.json({ updated: true })
