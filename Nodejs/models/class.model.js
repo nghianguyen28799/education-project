@@ -12,10 +12,6 @@ const classSchema = new Schema({
         type: String,
         required: true,
     },
-    Teacher: {
-        type: String,
-        required: true
-    },
 })
 
 var Class = mongoose.model('Class', classSchema, 'classes');

@@ -12,7 +12,7 @@ const studentSchema = new Schema({
         type: String,
         required: true,
     },
-    sex: {
+    gender: {
         type: String,
         required: true,
     },
@@ -20,10 +20,14 @@ const studentSchema = new Schema({
         type: String,
         required: true,
     },
+    teacherCode: {
+        type: String,
+        required: true,
+    },
     joined: {
         type: String,
         required: true,
-    }
+    },
 })
 
 var Student = mongoose.model('Student', studentSchema);

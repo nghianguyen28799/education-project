@@ -11,7 +11,7 @@ var userSchema = new Schema({
         type: String,
         required: true,
         min: 6,
-        max: 30
+        max: 30,
     },
 
     password: {
@@ -45,6 +45,11 @@ var userSchema = new Schema({
         required: true,
     },
 
+    avatar: {
+        type: String,
+        required: false,
+    },
+
     address: {
         type: String,
         required: true,
@@ -57,7 +62,7 @@ var userSchema = new Schema({
         required: false,
     },
 
-    token: [{
+    tokens: [{
         token: {
             type: String,
             require: true
@@ -69,16 +74,32 @@ var userSchema = new Schema({
 });
 
 userSchema.pre('save', async function(next) {
+    console.log('save');
     if(this.isModified('password')) {
         this.password = await bcrypt.hash(this.password, 8)
-
     }
     next()
 })
 
-userSchema.statics.password = async function(password) {
-    const passwd = await bcrypt.hash(password, 8)
-    return passwd
+userSchema.methods.changeInfo = async function(user) {
+    if(!user.password) {
+        this.userName = user.userName 
+        this.email = user.email
+        this.myFullName = user.myFullName
+        this.numberPhone = user.numberPhone
+        this.address = user.address
+        this.student = user.student
+        await this.save()
+    } else {
+        this.userName = user.userName 
+        this.email = user.email
+        this.password = user.password
+        this.myFullName = user.myFullName
+        this.numberPhone = user.numberPhone
+        this.address = user.address
+        this.student = user.student
+        await this.save()
+    }
 }
 
 userSchema.methods.generateAuthToken = async function(tokenDevices) {
@@ -88,12 +109,23 @@ userSchema.methods.generateAuthToken = async function(tokenDevices) {
     return token
 }
 
+userSchema.methods.removeAuthToken = async function(getToken) {
+    this.tokens = this.tokens.filter(token => {
+        return token.token !== getToken  
+    });
+    await this.save();
+    return getToken
+}
+
 userSchema.statics.findByCredentials = async function(userName, password) {
     const user = await User.findOne({ userName })
+
     if(!user) {
         throw new Error({ error: 'Invalid login credentials'})
     }
+
     const isPasswordCheck = await bcrypt.compare(password, user.password)
+
     if(!isPasswordCheck) {
         throw new Error({ error: 'Invalid login credentials' })
     }

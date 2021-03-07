@@ -19,9 +19,8 @@ module.exports = {
 
     createClass: async(req, res) => {
         const data = {
-            ClassCode: req.body.classCode,
-            Room: req.body.room,
-            Teacher: req.body.teacher,
+            ClassCode: req.body.ClassCode,
+            Room: req.body.Room,
         }
         await Class.create(data)
         .then(() => {
@@ -34,13 +33,12 @@ module.exports = {
 
     editClass: async(req, res) => {
         const condition = {
-            _id: req.body.id
+            _id: req.body._id
         }
 
         const action = {
-            ClassCode: req.body.classCode,
-            Room: req.body.room,
-            Teacher: req.body.teacher,
+            ClassCode: req.body.ClassCode,
+            Room: req.body.Room,
         }
       
         await Class.updateOne(condition, action)
@@ -53,7 +51,7 @@ module.exports = {
     },
 
     deleleClass: async(req, res) => {
-        const id = req.body.id
+        const id = req.body._id
      
         await Class.deleteOne({ _id: id })
         .then(() => {

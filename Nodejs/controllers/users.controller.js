@@ -6,7 +6,6 @@ const JWT_KEY = process.env.JWT_KEY;
 
 module.exports = {
     create: async(req, res) => {
-        // console.log("register");
         try { 
             const user = new User ({
                 userName : req.body.userName,
@@ -16,11 +15,9 @@ module.exports = {
                 numberPhone : req.body.numberPhone,
                 address : req.body.address,
                 student : req.body.student,
+                avatar: '',
             })
-            // console.log(user);
             await user.save();
-            // const token = await user.generateAuthToken()
-            // res.status(201).send({user, token})
         } catch (error) {
             res.status(400).send(error)
         }
@@ -28,44 +25,36 @@ module.exports = {
 
     edit: async(req, res) => {
         try {
-            const condition = {
-                _id: req.body.id
-            }
-    
             if(req.body.password) {
-                const passwowd = User.password(req.body.password);
-                var action = {
+                const user = await User.findOne({ _id: req.body.id })
+                const newInfo =  {
+                    id: req.body.id,
                     userName : req.body.userName,
-                    password : passwowd,
+                    password : req.body.password,
                     email : req.body.email,
                     myFullName : req.body.myFullName,
                     numberPhone : req.body.numberPhone,
                     address : req.body.address,
                     student : req.body.student,
                 }
-            }
-            else {
-                var action = {
+                await user.changeInfo(newInfo);
+            } else {
+                const user = await User.findOne({ _id: req.body.id })
+                const newInfo =  {
+                    id: req.body.id,
                     userName : req.body.userName,
-                    // password : req.body.password,
+                    // password : password,
                     email : req.body.email,
                     myFullName : req.body.myFullName,
                     numberPhone : req.body.numberPhone,
                     address : req.body.address,
                     student : req.body.student,
                 }
+                await user.changeInfo(newInfo);
             }
-            
-            console.log(action);
-
-            await User.updateOne(condition, action)
-            .then(() => {
-                res.json({ update: true })
-            })
         } catch(error) {
             res.status(400).send(error)
         }
-
     },
 
     
@@ -83,24 +72,47 @@ module.exports = {
 
 
     login: async(req, res) => {
-        console.log("login");
         try {
-            const userName = "nghianguyen";
-            const password = "a1234561";
+            const userName = req.body.userName;
+            const password = req.body.password;
             const user = await User.findByCredentials(userName, password)
-
             if(!user) {
                 return res.status(401).send({error: 'Login failed! Check authentication credentials'})
             }
             console.log("login success!!")
-            // const token = await user.generateAuthToken(tokenDivices)
-
+            const tokenDevices = 'abcdef';
+            const token = await user.generateAuthToken(tokenDevices)
+        
             res.send({ user, token });
         } catch (error) {
-            res.status(400).send(error);
+            // res.status(400).send(error);
+            res.send({error: true})
         }
     },
     
+
+    logout: async(req, res) => {
+        const token = req.token;
+        const _id = req.user;
+        const user = await User.find({ _id });
+        await user[0].removeAuthToken(token);
+    },
+
+    getUserFromToken: async(req, res) => {
+        const user = {
+            _id: req.user._id,
+            email: req.user.email,
+            myFullName: req.user.myFullName,
+            avatar: req.user.avatar,
+            numberPhone: req.user.numberPhone,
+            address: req.user.address,
+            student: req.user.student,
+            token: req.token
+        }
+        // console.log(user);
+        res.send(user)
+    },
+
     showUsers: async(req, res) => {
         await User.find()
         .then(data => {

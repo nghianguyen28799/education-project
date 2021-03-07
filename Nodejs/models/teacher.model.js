@@ -21,7 +21,7 @@ var teacherSchema = new Schema({
         // max: 255,
     },
 
-    Name: {
+    FullName: {
         type: String,
         required: true,
     },
@@ -31,7 +31,12 @@ var teacherSchema = new Schema({
         required: true,
     },
 
-    Sex: {
+    NumberPhone: {
+        type: String,
+        required: true,
+    },
+
+    Gender: {
         type: String,
         requied: true
     },
@@ -61,7 +66,17 @@ var teacherSchema = new Schema({
         required: true,
     },
 
-    token: [{
+    ClassCode: {
+        type: String,
+        required: false,
+    },
+
+    permission: {
+        type: String,
+        required: true
+    },
+
+    tokens: [{
         token: {
             type: String,
             require: true
@@ -80,9 +95,34 @@ teacherSchema.pre('save', async function(next) {
     next()
 })
 
-teacherSchema.statics.password = async function(password) {
-    const passwd = await bcrypt.hash(password, 8)
-    return passwd
+teacherSchema.methods.changeInfo = async function(teacher) {
+    if(teacher.password) {
+        this.userName = teacher.userName 
+        this.password = teacher.password
+        this.myFullName = teacher.myFullName
+        this.Email = teacher.Email
+        this.NumberPhone = teacher.NumberPhone,
+        this.Gender = teacher.Gender
+        this.BirthDay = teacher.BirthDay
+        this.Identification = teacher.Identification
+        this.HomeTown = teacher.HomeTown
+        this.Worked = teacher.Worked
+        this.permission = teacher.permission
+        this.ClassCode = teacher.ClassCode
+        await this.save()
+    } else {
+        this.userName = teacher.userName 
+        this.myFullName = teacher.myFullName
+        this.Email = teacher.Email
+        this.NumberPhone = teacher.NumberPhone,
+        this.Gender = teacher.Gender
+        this.BirthDay = teacher.BirthDay
+        this.Identification = teacher.Identification
+        this.HomeTown = teacher.HomeTown
+        this.Worked = teacher.Worked
+        this.ClassCode = teacher.ClassCode
+        await this.save()
+    }
 }
 
 teacherSchema.methods.generateAuthToken = async function(tokenDevices) {
@@ -92,12 +132,25 @@ teacherSchema.methods.generateAuthToken = async function(tokenDevices) {
     return token
 }
 
+teacherSchema.methods.removeAuthToken = async function(getToken) {
+    this.tokens = this.tokens.filter(token => {
+        return token.token !== getToken  
+    });
+    await this.save();
+    return getToken
+}
+
 teacherSchema.statics.findByCredentials = async function(userName, password) {
-    const user = await User.findOne({ userName })
+    const user = await Teacher.findOne({ userName })
+
+    console.log(user);
+
     if(!user) {
         throw new Error({ error: 'Invalid login credentials'})
     }
+
     const isPasswordCheck = await bcrypt.compare(password, user.password)
+
     if(!isPasswordCheck) {
         throw new Error({ error: 'Invalid login credentials' })
     }

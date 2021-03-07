@@ -41,19 +41,19 @@ io.on('connection', (socket) => {
         io.to(user.room).emit('message', { user: user.name, text: message })
         
 
-        // Chat.findOne({ userId: user.room })
-        // .then(data => {
-        //     // console.log(data.messages);
-        //     const { messages } = data;
-        //     const condition = {userId: user.room}
-        //     const info = {
-        //         name: user.name,
-        //         text: message
-        //     }
-        //     const action = { messages: [...messages, info] }
-        //     Chat.updateOne(condition, action)
-        //     .then(() => {})
-        // })
+        Chat.findOne({ userId: user.room })
+        .then(data => {
+            // console.log(data.messages);
+            const { messages } = data;
+            const condition = {userId: user.room}
+            const info = {
+                name: user.name,
+                text: message
+            }
+            const action = { messages: [...messages, info] }
+            Chat.updateOne(condition, action)
+            .then(() => {})
+        })
     })
 
     socket.on('disconnect', () => {

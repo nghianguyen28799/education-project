@@ -13,8 +13,9 @@ module.exports = {
         const data = {
             name: req.body.name,
             birthday: req.body.birthday,
-            sex: req.body.sex,
+            gender: req.body.gender,
             classCode: req.body.classCode,
+            teacherCode: req.body.teacherCode,
             joined: req.body.joined,
         }
         await Student.create(data)
@@ -30,15 +31,14 @@ module.exports = {
         const condition = {
             _id: req.body.id
         }
-
         const action = {
             name: req.body.name,
             birthday: req.body.birthday,
-            sex: req.body.sex,
+            gender: req.body.gender,
             classCode: req.body.classCode,
+            teacherCode: req.body.teacherCode,
             joined: req.body.joined,
         }
-      
         await Student.updateOne(condition, action)
         .then(() => {
             res.json({ updated: true })
