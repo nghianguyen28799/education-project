@@ -13,4 +13,6 @@ Router.post('/edit', controller.editClass)
 
 Router.post('/delete', controller.deleleClass)
 
+Router.post("/getClassById", controller.getClassById);
+
 module.exports = Router;

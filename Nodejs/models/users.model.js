@@ -57,9 +57,19 @@ var userSchema = new Schema({
         max: 255,
     },
 
-    student: {
+    birthDay: {
         type: String,
-        required: false,
+        required: true,
+    },
+
+    gender: {
+        type: String,
+        required: true,
+    },
+
+    relationship: {
+        type: String,
+        required: true,
     },
 
     tokens: [{
@@ -88,7 +98,9 @@ userSchema.methods.changeInfo = async function(user) {
         this.myFullName = user.myFullName
         this.numberPhone = user.numberPhone
         this.address = user.address
-        this.student = user.student
+        this.gender = user.gender,
+        this.relationship = user.relationship,
+        this.birthDay = user.birthDay,
         await this.save()
     } else {
         this.userName = user.userName 
@@ -97,10 +109,17 @@ userSchema.methods.changeInfo = async function(user) {
         this.myFullName = user.myFullName
         this.numberPhone = user.numberPhone
         this.address = user.address
-        this.student = user.student
+        this.gender = user.gender,
+        this.relationship = user.relationship,
+        this.birthDay = user.birthDay,
         await this.save()
     }
 }
+
+userSchema.methods.changePassword = async function(newPassword) {
+    this.password = newPassword
+    await this.save();
+};
 
 userSchema.methods.generateAuthToken = async function(tokenDevices) {
     const token = jwt.sign({ _id: this._id }, JWT_KEY)

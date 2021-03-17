@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const chatSchema = new Schema({
-    userId: String,
-    messages: Array
+    room: String,
+    messages: Array,
 })
 
 var Chat = mongoose.model('Chat', chatSchema, 'chat');

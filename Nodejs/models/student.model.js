@@ -16,6 +16,10 @@ const studentSchema = new Schema({
         type: String,
         required: true,
     },
+    avatar: {
+        type: String,
+        required: false,
+    },
     classCode: {
         type: String,
         required: true,
@@ -24,6 +28,12 @@ const studentSchema = new Schema({
         type: String,
         required: true,
     },
+    
+    parentsCode: {
+        type: String,
+        required: false,
+    },
+
     joined: {
         type: String,
         required: true,

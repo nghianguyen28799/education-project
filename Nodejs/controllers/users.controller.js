@@ -15,7 +15,11 @@ module.exports = {
                 numberPhone : req.body.numberPhone,
                 address : req.body.address,
                 student : req.body.student,
+                gender: req.body.gender,
+                relationship: req.body.relationship,
+                birthDay: req.body.birthDay,
                 avatar: '',
+
             })
             await user.save();
         } catch (error) {
@@ -35,7 +39,9 @@ module.exports = {
                     myFullName : req.body.myFullName,
                     numberPhone : req.body.numberPhone,
                     address : req.body.address,
-                    student : req.body.student,
+                    gender: req.body.gender,
+                    relationship: req.body.relationship,
+                    birthDay: req.body.birthDay,
                 }
                 await user.changeInfo(newInfo);
             } else {
@@ -48,7 +54,9 @@ module.exports = {
                     myFullName : req.body.myFullName,
                     numberPhone : req.body.numberPhone,
                     address : req.body.address,
-                    student : req.body.student,
+                    gender: req.body.gender,
+                    relationship: req.body.relationship,
+                    birthDay: req.body.birthDay,
                 }
                 await user.changeInfo(newInfo);
             }
@@ -75,12 +83,13 @@ module.exports = {
         try {
             const userName = req.body.userName;
             const password = req.body.password;
+   
             const user = await User.findByCredentials(userName, password)
             if(!user) {
                 return res.status(401).send({error: 'Login failed! Check authentication credentials'})
             }
-            console.log("login success!!")
-            const tokenDevices = 'abcdef';
+
+            const { tokenDevices } = req.body;
             const token = await user.generateAuthToken(tokenDevices)
         
             res.send({ user, token });
@@ -101,12 +110,16 @@ module.exports = {
     getUserFromToken: async(req, res) => {
         const user = {
             _id: req.user._id,
-            email: req.user.email,
-            myFullName: req.user.myFullName,
-            avatar: req.user.avatar,
-            numberPhone: req.user.numberPhone,
-            address: req.user.address,
-            student: req.user.student,
+            userName: req.user.userName,
+            Email: req.user.email,
+            FullName: req.user.myFullName,
+            Avatar: req.user.avatar,
+            NumberPhone: req.user.numberPhone,
+            Address: req.user.address,
+            permission: 'parents',
+            gender: req.user.gender,
+            relationship: req.user.relationship,
+            birthDay: req.user.birthDay,
             token: req.token
         }
         // console.log(user);
@@ -120,7 +133,85 @@ module.exports = {
         })
     },
 
-    test: (req, res) => {
-        res.send("HELLO WORLD")
-    }
+    getUserFromClass: async(req, res) => {
+        const isClass = req.body.ClassCode;
+        await User.find({ ClassCode: isClass })
+        .then(data => {
+            res.json(data);
+        })
+    },
+
+    getUserById: async(req, res) => {
+        const id = req.body.id;
+        await User.find({ _id: id })
+        .then(data => {
+            res.json(data);
+        })
+    },
+
+    changeInfoParents: async(req, res) => {
+        const user = req.body.parentsData;
+
+        const condition = {
+            _id: user._id
+        }
+
+        const handler = {
+            myFullName: user.FullName,
+            numberPhone: user.NumberPhone,
+            email: user.Email,
+            birthDay: user.birthDay,
+            relationship: user.relationship,
+            address: user.Address,
+            gender: user.gender,
+        }
+        // console.log(handler);
+      
+        await User.updateOne(condition, handler)
+        .then(() => {
+            res.send({data: 'Updated success'})
+        }).catch(error => {
+            res.send({error: error})
+        })
+    },
+
+    changeAvatarParents: async(req, res) => {
+        const { path } = req.file;
+        const id = req.body._id;
+        const condition = { _id: id }
+        const handler = {
+            avatar: path
+        }
+        await User.updateOne(condition, handler)
+        .then(() => {
+            res.send({uri: path})
+        }).catch(error => {
+            res.send({error: error})
+        })
+    },
+
+    changePasswordParents: async(req, res) => {
+        try {
+            const { userName, password, newPassword1, newPassword2 } = req.body;
+
+            const user = await User.findByCredentials(userName, password)
+            if(!user) {
+                return res.status(401).send({error: 'Login failed! Check authentication credentials'})
+            }
+            
+            if(newPassword1.length < 7 ) {
+                return res.json({ errorValid: true })
+            }
+            
+            if(newPassword1 !== newPassword2) {
+                return res.json({ errorExist: true })
+            }
+            
+            await user.changePassword(newPassword1)
+
+            return res.json({ success: true })
+        } catch (error) {
+            res.send({error: true})
+        }
+    },
 }

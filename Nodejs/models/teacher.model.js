@@ -125,6 +125,11 @@ teacherSchema.methods.changeInfo = async function(teacher) {
     }
 }
 
+teacherSchema.methods.changePassword = async function(newPassword) {
+    this.password = newPassword
+    await this.save();
+};
+
 teacherSchema.methods.generateAuthToken = async function(tokenDevices) {
     const token = jwt.sign({ _id: this._id }, JWT_KEY)
     this.tokens = this.tokens.concat({token, tokenDevices})
@@ -142,8 +147,6 @@ teacherSchema.methods.removeAuthToken = async function(getToken) {
 
 teacherSchema.statics.findByCredentials = async function(userName, password) {
     const user = await Teacher.findOne({ userName })
-
-    console.log(user);
 
     if(!user) {
         throw new Error({ error: 'Invalid login credentials'})

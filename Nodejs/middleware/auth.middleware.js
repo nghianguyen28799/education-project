@@ -8,7 +8,7 @@ const auth = async(req, res, next) => {
     const data = jwt.verify(token, process.env.JWT_KEY)
     try {
         if(permission === 'teacher') {
-            const user = await Teacher.findOne({ _id: data._id, 'tokens.token': token })
+            const user = await Teacher.findOne({ _id: data._id })
             if (!user) {
                 throw new Error()
             }
@@ -16,7 +16,7 @@ const auth = async(req, res, next) => {
             req.token = token
             next()
         } else {
-            const user = await User.findOne({ _id: data._id, 'tokens.token': token })
+            const user = await User.findOne({ _id: data._id })
             if (!user) {
                 throw new Error()
             }

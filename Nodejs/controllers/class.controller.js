@@ -60,5 +60,13 @@ module.exports = {
         .catch(error => {
             console.log(error);
         })
-    }
+    },
+
+    getClassById: (req, res) => {
+        const id = req.body.id
+        Class.find({_id: id})
+        .then(data => {
+            res.json(data);
+        })
+    },
 }

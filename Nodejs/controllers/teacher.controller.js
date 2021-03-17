@@ -1,6 +1,5 @@
 const Teacher = require("../models/teacher.model");
 const Class = require("../models/class.model");
-const { response } = require("../routes/index.route");
 
 module.exports = {
     showInfoTeacher: (req, res) => {
@@ -77,7 +76,6 @@ module.exports = {
 
     deleteAccountTeacher: async(req, res) => {
         const id = req.body.id
-        console.log(id);
         await Teacher.deleteOne({ _id: id })
         .then(() => {
             res.json({ deleted: id })
@@ -95,8 +93,8 @@ module.exports = {
             if(!teacher) {
                 return res.status(401).send({error: 'Login failed! Check authentication credentials'})
             }
-            console.log("login success!!")
-            const tokenDevices = 'abcdef';
+  
+            const { tokenDevices } = req.body;
             const token = await teacher.generateAuthToken(tokenDevices)
         
             res.send({ teacher, token });
@@ -108,6 +106,7 @@ module.exports = {
     
 
     logout: async(req, res) => {
+        console.log('123123');
         const token = req.token;
         const _id = req.user;
         const user = await Teacher.find({ _id });
@@ -135,4 +134,70 @@ module.exports = {
         res.send(user)
     },
 
+    getUserById: async(req, res) => {
+        const id = req.body.id;
+        await Teacher.findOne({ _id: id })
+        .then(data => {
+            res.json(data);
+        })
+    },
+
+    changeUserInfo: async(req, res) => {
+        const data = req.body.userData;
+        const condition = { _id: data._id }
+        const handler = {
+            FullName: data.FullName,
+            Email: data.Email,
+            NumberPhone: data.NumberPhone,
+            BirthDay: data.BirthDay,
+            Identification: data.Identification,
+        }
+
+        await Teacher.updateOne(condition, handler)
+        .then(() => {
+            res.send({data: 'Updated success'})
+        }).catch(error => {
+            res.send({error: error})
+        })
+    },
+
+    changeUserAvatar: async(req, res) => {
+        const { path } = req.file;
+        const id = req.body._id;
+        const condition = { _id: id }
+        const handler = {
+            Avatar: path
+        }
+        await Teacher.updateOne(condition, handler)
+        .then(() => {
+            res.send({uri: path})
+        }).catch(error => {
+            res.send({error: error})
+        })
+    },
+
+    changePasswordTeacher: async(req, res) => {
+        try {
+            const { userName, password, newPassword1, newPassword2 } = req.body;
+
+            const user = await Teacher.findByCredentials(userName, password)
+            if(!user) {
+                return res.status(401).send({error: 'Login failed! Check authentication credentials'})
+            }
+            
+            if(newPassword1.length < 7 ) {
+                return res.json({ errorValid: true })
+            }
+            
+            if(newPassword1 !== newPassword2) {
+                return res.json({ errorExist: true })
+            }
+            
+            await user.changePassword(newPassword1)
+
+            return res.json({ success: true })
+        } catch (error) {
+            res.send({error: true})
+        }
+    },
 }
