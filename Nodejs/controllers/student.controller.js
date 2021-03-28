@@ -80,6 +80,17 @@ module.exports = {
         })
     },
 
+    getStudentToScan: async(req, res) => {
+        const id = req.params.id
+        const isStudent = await Student.findOne({ _id: id })
+        
+        if(isStudent) {
+            res.send(isStudent);
+        } else {
+            res.send({})
+        }
+    },
+
     changeStudentAvatar: async(req, res) => {
         const { path } = req.file;
         const id = req.body._id;

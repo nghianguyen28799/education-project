@@ -25,8 +25,7 @@ const io = socketio(server, {
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 const Chat = require("../models/chat.model");
 io.on('connection', (socket) => {
-    // console.log('We have a new connection !!');
-    // console.log(socket.id);
+
     socket.on('join', ({ name, room }, callback) => {
         const { error, user } = addUser({ id: socket.id, name, room })
 
@@ -42,7 +41,6 @@ io.on('connection', (socket) => {
  
         Chat.findOne({ room: user.room })
         .then(data => {
-            // console.log(data);
             const { messages } = data;
             messages.unshift(message[0]);
             const newMessages = messages

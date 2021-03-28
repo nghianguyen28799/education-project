@@ -29,6 +29,8 @@ Router.post('/getStudentById', controller.getStudentById)
 
 Router.post('/getStudentByParentsId', controller.getStudentByParentsId)
 
+Router.get('/getStudentToScan/:id', controller.getStudentToScan)
+
 Router.post('/changeStudentAvatar',  uploadUser.single('photo'), controller.changeStudentAvatar)
 
 module.exports = Router;
