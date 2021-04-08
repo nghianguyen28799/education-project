@@ -38,6 +38,16 @@ const studentSchema = new Schema({
         type: String,
         required: true,
     },
+
+    attendancedDay: {
+        type: Date,
+        required: false,
+    },
+
+    attendanceStatus: {
+        type: Boolean,
+        required: true,
+    }
 })
 
 var Student = mongoose.model('Student', studentSchema);

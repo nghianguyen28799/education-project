@@ -19,6 +19,8 @@ module.exports = {
             parentsCode: req.body.parentsCode,
             avatar: '',
             joined: req.body.joined,
+            attendanceStatus: "",
+            attendanceStatus: false
         }
         await Student.create(data)
         .then(() => {
@@ -78,6 +80,13 @@ module.exports = {
         .then(data => {
             res.json(data)
         })
+    },
+
+    getStudentByClassCode: async(req, res) => {
+        // const classCode = "604348f93cdf643b14041c52";
+        const classCode = req.body.classCode;
+        const data = await Student.find({ classCode: classCode })
+        res.send(data)
     },
 
     getStudentToScan: async(req, res) => {

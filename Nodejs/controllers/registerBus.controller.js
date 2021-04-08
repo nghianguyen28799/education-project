@@ -37,36 +37,72 @@ module.exports = {
         const type = req.body.type;
         const supervisorId = req.body.supervisorId
         const today = new Date();
-        const getToday = (today.getDate()+1+'/'+today.getMonth())
-
-        const findData = await SupervisorSchedule.find({ supervisorId: supervisorId })
-        // var destination; 
-        console.log(findData);
-        if(findData !== []) {
-            const findDate = (new Date(findData[findData.length].date)).getDate()+'/'+(new Date(findData[findData.length].date)).getMonth();
-            // console.log(findDate);
+        // const getToday = (today.getDate()+1+'/'+today.getMonth())
+        var findDateNew;
+        var destination;
+        const findData = await SupervisorSchedule.findOne({ supervisorId: supervisorId })
+        if(findData) {
+            findDateNew = (new Date(findData.date)).getDate()+'/'+(new Date(findData.date)).getMonth();
+            destination = findData.process.destination
         }
 
-
-        // const listBook = [];
-        // const listRegister = await registerBus.findOne({ parentsId: parentsId })
-        // if(listRegister !== null) {
-        //     listRegister.listBookStation.map(value => {
-        //         const getDate = (new Date(value.date)).getDate()+'/'+(new Date(value.date)).getMonth();
-        //         if(getToday === getDate && type === "OnBus") {
-        //             listBook.push({
-        //                 ...value,
-        //             })
-        //         } else if(getToday === getDate && type === "OutBus") {
-        //             listBook.push({
-        //                 ...value,
-
-        //             })
-        //         } else {
-
-        //         }
-        //     });
-        // }
+        const listBook = [];
+        const listRegister = await registerBus.findOne({ parentsId: parentsId })
+        if(listRegister !== null) {
+            listRegister.listBookStation.map(value => {
+                const getDate = (new Date(value.date)).getDate()+'/'+(new Date(value.date)).getMonth();
+                // console.log(value);
+                if(findDateNew === getDate ) {
+                    if(destination === 1 && type === "OnBus") {
+                        listBook.push({
+                            _id: value._id,
+                            date: value.date,
+                            station: value.station,
+                            getOnBusFromHouse: true,
+                            getOutBusFromHouse: value.getOutBusFromHouse,
+                            getOnBusFromSchool: value.getOnBusFromSchool,
+                            getOutBusFromSchool: value.getOutBusFromSchool
+                        })
+                    } else if(destination === 1 && type === "OutBus") {
+                        listBook.push({
+                            _id: value._id,
+                            date: value.date,
+                            station: value.station,
+                            getOnBusFromHouse: value.getOnBusFromHouse,
+                            getOutBusFromHouse: true,
+                            getOnBusFromSchool: value.getOnBusFromSchool,
+                            getOutBusFromSchool: value.getOutBusFromSchool
+                        })
+                    } else if(destination === 2 && type === "OnBus") {
+                        listBook.push({
+                            _id: value._id,
+                            date: value.date,
+                            station: value.station,
+                            getOnBusFromHouse: value.getOnBusFromHouse,
+                            getOutBusFromHouse: value.getOutBusFromHouse,
+                            getOnBusFromSchool: true,
+                            getOutBusFromSchool: value.getOutBusFromSchool
+                        })
+                    } else if(destination === 2 && type === "OutBus") {
+                        listBook.push({
+                            _id: value._id,
+                            date: value.date,
+                            station: value.station,
+                            getOnBusFromHouse: value.getOnBusFromHouse,
+                            getOutBusFromHouse: value.getOutBusFromHouse,
+                            getOnBusFromSchool: value.getOnBusFromSchool,
+                            getOutBusFromSchool: true
+                        })
+                    }
+                } else {
+                    listBook.push(value)
+                }
+            });
+        }
+        registerBus.updateOne({ parentsId: parentsId }, { listBookStation: listBook })
+        .then(() => {
+            res.send(200)
+        })
     },
 
     show: async (req, res) => {

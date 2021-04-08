@@ -6,7 +6,7 @@ module.exports = {
         const id = req.body.id;
         const getStatus = req.body.status;
         const today = new Date();
-        const findData = await SupervisorSchedule.find({ supervisorId: id })    
+        const findData = await SupervisorSchedule.findOne({ supervisorId: id })    
         var newData = {
             supervisorId: id,
             date: today,
@@ -20,23 +20,21 @@ module.exports = {
                 status: true
             }
         }
-        if(findData === []) {
+        if(!findData) {
             await SupervisorSchedule.create(newData)
             res.send(newData)
-            console.log('1');
         } else {
-            const getDate = findData[findData.length-1].date.getDate()+"/"+findData[findData.length-1].date.getMonth()
+            const getDate = findData.date.getDate()+"/"+findData.date.getMonth()
             const getDateToday = today.getDate()+"/"+today.getMonth()    
-            console.log(getDate, getDateToday);
+            const condition = {
+                _id: findData._id,
+            }
             if(getDate === getDateToday) {
-                const condition = {
-                    _id: findData[findData.length-1]._id,
-                }
-                if(getStatus === "OnBus" && findData[findData.length-1].process.destination === 1) {
+                if(getStatus === "OnBus" && findData.process.destination === 1) {
                     var handler = {
                         status: {
                             getOnBus: true,
-                            getOutBus: findData[findData.length-1].status.getOutBus,
+                            getOutBus: findData.status.getOutBus,
                         },
                         process: {
                             destination: 2,
@@ -46,18 +44,26 @@ module.exports = {
                 } else if(getStatus === "OutBus") {
                     var handler = {
                         status: {
-                            getOnBus: findData[findData.length-1].status.getOnBus,
+                            getOnBus: findData.status.getOnBus,
                             getOutBus: true,
                         }
                     }
                 }
                 await SupervisorSchedule.updateOne(condition, handler)
                 .then(() => {
-                    res.send({ update: true })
+                    SupervisorSchedule.findOne({ supervisorId: id })
+                    .then(data => {
+                        res.send(data)
+                    })
                 }) 
             } else {
-                await SupervisorSchedule.create(newData)
-                res.send(newData)
+                await SupervisorSchedule.updateOne(condition, newData)
+                .then(() => {
+                    SupervisorSchedule.findOne({ supervisorId: id })
+                    .then((data) => {
+                        res.send(data)
+                    })
+                })
             }          
         }
     },
@@ -66,25 +72,25 @@ module.exports = {
         const id = req.body.id;
         const getStatus = req.body.status;
         const today = new Date();
-        const findData = await SupervisorSchedule.find({ supervisorId: id })
-        const getDate = findData[findData.length-1].date.getDate()+"/"+findData[findData.length-1].date.getMonth()
+        const findData = await SupervisorSchedule.findOne({ supervisorId: id })
+        const getDate = findData.date.getDate()+"/"+findData.date.getMonth()
         const getDateToday = today.getDate()+"/"+today.getMonth()    
         if(getDate === getDateToday) {
             const condition = {
-                _id: findData[findData.length-1]._id,
+                _id: findData._id,
             }
             if(getStatus === "OnBus") {
                 var handler = {
                     status: {
                         getOnBus: false,
-                        getOutBus: findData[findData.length-1].status.getOutBus,
+                        getOutBus: findData.status.getOutBus,
                     },
                 }
 
-            } else if(getStatus === "OutBus" && findData[findData.length-1].process.destination === 1) {
+            } else if(getStatus === "OutBus" && findData.process.destination === 1) {
                 var handler = {
                     status: {
-                        getOnBus: findData[findData.length-1].status.getOnBus,
+                        getOnBus: findData.status.getOnBus,
                         getOutBus: false,
                     },
                     process: {
@@ -92,10 +98,10 @@ module.exports = {
                         status: false
                     }
                 }
-            } else if(getStatus === "OutBus" && findData[findData.length-1].process.destination === 2) {
+            } else if(getStatus === "OutBus" && findData.process.destination === 2) {
                 var handler = {
                     status: {
-                        getOnBus: findData[findData.length-1].status.getOnBus,
+                        getOnBus: findData.status.getOnBus,
                         getOutBus: false,
                     },
                     process: {
@@ -106,8 +112,12 @@ module.exports = {
             }
             await SupervisorSchedule.updateOne(condition, handler)
             .then(() => {
-                res.send({ update: true })
+                SupervisorSchedule.findOne({ supervisorId: id })
+                .then(data => {
+                    res.send(data)
+                })   
             }) 
+
         } else {
             await SupervisorSchedule.create(newData)
             res.send(newData)
@@ -117,12 +127,13 @@ module.exports = {
     show: async(req, res) => {
         const id = req.body.id
         const today = new Date();
-        const findData = await SupervisorSchedule.find({ supervisorId: id })
-        if(findData !== []) {
-            const getDate = findData[findData.length-1].date.getDate()+"/"+findData[findData.length-1].date.getMonth()
+        const findData = await SupervisorSchedule.findOne({ supervisorId: id })
+
+        if(findData) {
+            const getDate = findData.date.getDate()+"/"+findData.date.getMonth()
             const getDateToday = today.getDate()+"/"+today.getMonth()    
             if(getDate === getDateToday) {
-                res.send(findData[findData.length-1])
+                res.send(findData)
             }
         }
     },
@@ -130,9 +141,11 @@ module.exports = {
     showDestination: async(req, res) => {
         const id = req.body.id
         // console.log(id);
-        const findData = await SupervisorSchedule.find({ supervisorId: id })
-        if(findData !== []) {
-            res.send(findData[findData.length-1])
+        const findData = await SupervisorSchedule.findOne({ supervisorId: id })
+        if(findData) {
+            res.send(findData)
+        } else {
+            res.send({})
         }
     }
 }
