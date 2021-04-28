@@ -32,5 +32,5 @@ module.exports = {
             return getId === id
         })
         res.send(userList)
-    }
+    },
 }

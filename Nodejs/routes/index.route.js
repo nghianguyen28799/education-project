@@ -13,6 +13,8 @@ const ScheduleRoute = require('./schedule.route')
 const HistoryRoute = require('./history.route')
 const BusRoute = require('./bus.route')
 const SupervisorSchedule = require('./supervisorSchedule.route')
+const NoAttendance = require('./noAttendance.route')
+const Notification = require('./notification.route')
 
 app.use('/users', UsersRoute);
 app.use('/class', ClassRoute);
@@ -26,6 +28,8 @@ app.use('/schedule', ScheduleRoute)
 app.use('/history', HistoryRoute)
 app.use('/bus', BusRoute)
 app.use('/supervisorschedule', SupervisorSchedule)
+app.use('/noattendance', NoAttendance)
+app.use('/notification', Notification)
 
 
 

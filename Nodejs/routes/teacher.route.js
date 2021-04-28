@@ -36,6 +36,10 @@ Router.post('/changeUserInfo', controller.changeUserInfo);
 
 Router.post('/changeUserAvatar', uploadUser.single('photo'), controller.changeUserAvatar)
 
+Router.post('/handlePicture', uploadUser.single('photo'), controller.handlePicture)
+
 Router.post('/changePasswordTeacher', controller.changePasswordTeacher)
+
+Router.post('/getSupervisorInfo', controller.getSupervisorInfo)
 
 module.exports = Router;

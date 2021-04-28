@@ -18,6 +18,7 @@ const registerBusSchema = new Schema({
                 getOutBusFromHouse: Boolean,
                 getOnBusFromSchool: Boolean,
                 getOutBusFromSchool: Boolean,
+                supervisorId: String,
             }
         ],
         required: true,

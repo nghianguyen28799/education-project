@@ -101,7 +101,7 @@ module.exports = {
         }
         registerBus.updateOne({ parentsId: parentsId }, { listBookStation: listBook })
         .then(() => {
-            res.send(200)
+            res.sendStatus(200)
         })
     },
 

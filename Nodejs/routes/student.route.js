@@ -33,6 +33,8 @@ Router.post('/getStudentByClassCode', controller.getStudentByClassCode)
 
 Router.get('/getStudentToScan/:id', controller.getStudentToScan)
 
+Router.post('/getAttendanceSuccessly', controller.getAttendanceSuccessly)
+
 Router.post('/changeStudentAvatar',  uploadUser.single('photo'), controller.changeStudentAvatar)
 
 module.exports = Router;

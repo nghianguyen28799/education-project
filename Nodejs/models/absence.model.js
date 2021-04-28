@@ -9,6 +9,11 @@ const absenceSchema = new Schema({
         required: true,
     },
 
+    classCode: {
+        type: String,
+        required: true,
+    },
+
     dates: {
         type: [
             {
@@ -22,7 +27,7 @@ const absenceSchema = new Schema({
     reason: {
         type: String,
         required: true,
-    }
+    },
 
 })
 

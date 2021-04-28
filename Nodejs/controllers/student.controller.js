@@ -1,4 +1,6 @@
 const Student = require("../models/student.model");
+const User = require("../models/users.model");
+
 // const { response } = require("../routes/index.route");
 
 module.exports = {
@@ -94,9 +96,36 @@ module.exports = {
         const isStudent = await Student.findOne({ _id: id })
         
         if(isStudent) {
-            res.send(isStudent);
+            User.findOne({ _id: isStudent.parentsCode })
+            .then(data => {
+                res.send({student: isStudent, tokens: data.tokens});
+            })
         } else {
             res.send({})
+        }
+    },
+
+    getAttendanceSuccessly: async(req, res) => {
+        const id = req.body.id
+        const isStudent = await Student.findOne({ _id: id })
+
+        if(isStudent) {
+            const condition = {
+                _id: id
+            }
+
+            const handler = {
+                attendanceDay : new Date(),
+                attendanceStatus : true
+            }
+
+            Student.updateOne(condition, handler)
+            .then((data) => {
+
+                res.send(data)
+            })
+        } else {
+            res.send(200)
         }
     },
 

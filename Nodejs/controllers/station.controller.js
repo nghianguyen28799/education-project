@@ -2,44 +2,43 @@ const Station = require("../models/station.model");
 
 module.exports = {
     create: async(req, res) => {
-        // const { name, address, gps} = req.body
-        // const name = "Bến Xe Trung Tâm Cần Thơ";
-        // const address = "91b Đường Nguyễn Văn Linh, Hưng Lợi, Ninh Kiều, Cần Thơ";
-        // const gps = {
-        //     latitude: 10.023741694060448,
-        //     longitude: 105.76248314870995,
-        // }
-
-        // const name = "Bến Xe Cần Thơ Mới";
-        // const address = "Hưng Thành, Cái Răng, Cần Thơ";
-        // const gps = {
-        //     latitude: 10.004226618056919, 
-        //     longitude: 105.77186086905978,
-        // }
-
-        const name = "Bên xe 3";
-        const address = "6 Hùng Vương, An Hội, Ninh Kiều, Cần Thơ, Việt Nam";
+        const name = req.body.name;
+        const address = req.body.address;
         const gps = {
-            latitude: 10.04501309542753, 
-            longitude: 105.77956274015918
+            latitude: req.body.lat, 
+            longitude: req.body.lng,
         }
-
 
         Station.create({
             name: name,
             address: address,
             gps: gps
         }).then(() => {
-            res.send({ create: true })
+            res.sendStatus(200)
         })
     },
 
     edit: async(req, res) => {
+        const name = req.body.name;
+        const address = req.body.address;
+        const gps = {
+            latitude: req.body.lat, 
+            longitude: req.body.lng,
+        }
 
+        Station.updateOne({_id: req.body.id},{
+            name: name,
+            address: address,
+            gps: gps
+        }).then(() => {
+            res.sendStatus(200)
+        })
     },
 
     remove: async(req, res) => {
-
+        Station.deleteOne({_id: req.body.id}).then(() => {
+            res.sendStatus(200)
+        })
     },
 
     show: async(req, res) => {

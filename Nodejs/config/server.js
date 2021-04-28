@@ -52,7 +52,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
-        // console.log('User had left !!');
+        console.log('User had left !!');
     })
 })
 

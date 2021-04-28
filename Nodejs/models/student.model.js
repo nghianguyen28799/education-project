@@ -39,7 +39,7 @@ const studentSchema = new Schema({
         required: true,
     },
 
-    attendancedDay: {
+    attendanceDay: {
         type: Date,
         required: false,
     },

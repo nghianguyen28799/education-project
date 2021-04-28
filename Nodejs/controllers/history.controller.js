@@ -32,7 +32,7 @@ module.exports = {
 
     show: async (req, res) => {
         const parentsId = req.body.id;
-        History.findOne({ parentsId: parentsId })
+        History.findOne({ parentsId: parentsId }).limit(15)
         .then(data => {
             res.send(data);
         })

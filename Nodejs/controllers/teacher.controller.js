@@ -200,4 +200,20 @@ module.exports = {
             res.send({error: true})
         }
     },
+
+    
+    getSupervisorInfo: async(req, res) => {
+        const id = req.body.id;
+        const data = await Teacher.findOne({ permission: 'supervisor' })
+        if(data) {
+            res.send(data._id)
+        } else {
+            res.send("")
+        }
+    },
+
+    handlePicture: async(req, res) => {
+        const { path } = req.file;
+        res.send({ uri: path })
+    }
 }
