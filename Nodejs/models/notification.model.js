@@ -23,9 +23,11 @@ const notificationSchema = new Schema({
         type: Boolean,
         required: true
     },
+
     picture: {
         type: String,
-        required: true,
+        default: '',
+        required: false,
     }
 })
 

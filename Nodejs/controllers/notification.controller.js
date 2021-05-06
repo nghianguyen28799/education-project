@@ -4,13 +4,14 @@ const User = require("../models/users.model");
 
 module.exports = {
     create: async(req, res) => {
+        const picture = req.body.picture;
         Notification.create({
             parentsId: req.body.parentsId,
             title: req.body.title,
             content: req.body.content,
             date: new Date(),
             status: false,
-            picture: req.body.picture,
+            picture: picture ? picture : '',
         }).then(() => {
             res.sendStatus(200)
         })

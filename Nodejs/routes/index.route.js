@@ -15,6 +15,7 @@ const BusRoute = require('./bus.route')
 const SupervisorSchedule = require('./supervisorSchedule.route')
 const NoAttendance = require('./noAttendance.route')
 const Notification = require('./notification.route')
+const Rating = require('./rating.route')
 
 app.use('/users', UsersRoute);
 app.use('/class', ClassRoute);
@@ -30,6 +31,7 @@ app.use('/bus', BusRoute)
 app.use('/supervisorschedule', SupervisorSchedule)
 app.use('/noattendance', NoAttendance)
 app.use('/notification', Notification)
+app.use('/rating', Rating)
 
 
 
