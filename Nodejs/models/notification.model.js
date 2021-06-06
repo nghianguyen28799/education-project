@@ -28,6 +28,12 @@ const notificationSchema = new Schema({
         type: String,
         default: '',
         required: false,
+    },
+
+    other: {
+        type: String,
+        default: '',
+        required: false,
     }
 })
 

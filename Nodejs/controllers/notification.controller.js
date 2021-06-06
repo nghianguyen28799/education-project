@@ -12,6 +12,7 @@ module.exports = {
             date: new Date(),
             status: false,
             picture: picture ? picture : '',
+            other: '',
         }).then(() => {
             res.sendStatus(200)
         })
@@ -39,6 +40,15 @@ module.exports = {
     editStatus: async(req, res) => {
         const id = req.body.id;
         await Notification.updateOne({_id: id}, {status: true})
+        .then(() => {
+            res.sendStatus(200)
+        })
+    },
+
+    editConfirm: async(req, res) => {
+        const {id, text} = req.body;
+        // console.log(text);
+        await Notification.updateOne({_id: id}, {status: true, other: text})
         .then(() => {
             res.sendStatus(200)
         })

@@ -25,10 +25,11 @@ const io = socketio(server, {
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 const Chat = require("../models/chat.model");
 io.on('connection', (socket) => {
+    console.log("User da ket noi");
 
     socket.on('join', ({ name, room }, callback) => {
         const { error, user } = addUser({ id: socket.id, name, room })
-
+        // console.log(user);
         if(error) return callback(error);
   
         socket.join(user.room)
@@ -51,6 +52,11 @@ io.on('connection', (socket) => {
         })
     })
 
+    socket.on('leaveroom', () => {
+        // console.log(name);
+        // console.log(room);
+        removeUser({ id: socket.id });
+    })
     socket.on('disconnect', () => {
         console.log('User had left !!');
     })

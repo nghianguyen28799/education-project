@@ -215,5 +215,12 @@ module.exports = {
     handlePicture: async(req, res) => {
         const { path } = req.file;
         res.send({ uri: path })
+    },
+
+    defaultPicture: async(req, res) => {
+        Teacher.updateOne({ _id: req.body.id }, {Avatar: ''})
+        .then(() => {
+            res.send({ success: true})
+        })
     }
 }

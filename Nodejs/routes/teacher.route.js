@@ -42,4 +42,6 @@ Router.post('/changePasswordTeacher', controller.changePasswordTeacher)
 
 Router.post('/getSupervisorInfo', controller.getSupervisorInfo)
 
+Router.post('/defaultPicture', controller.defaultPicture);
+
 module.exports = Router;

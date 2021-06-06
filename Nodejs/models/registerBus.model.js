@@ -8,22 +8,51 @@ const registerBusSchema = new Schema({
         type: String,
         required: true,
     },
-
-    listBookStation: {
-        type: [
-            {
-                date: Date,
-                station: String,
-                getOnBusFromHouse: Boolean,
-                getOutBusFromHouse: Boolean,
-                getOnBusFromSchool: Boolean,
-                getOutBusFromSchool: Boolean,
-                supervisorId: String,
-            }
-        ],
+    supervisorId: {
+        type: String,
+        required: true,
+    },
+    supervisorIdTemp: {
+        type: String,
+        required: true,
+    },
+    date: {
+        type: Date,
+        required: true,
+    },
+    station: {
+        type: String,
+        required: true,
+    },
+    startDate: {
+        type: Date,
+        required: true,
+    },
+    endDate: {
+        type: Date,
+        required: true,
+    }, 
+    getOnBusFromHouse:{
+        type: Boolean,
+        required: true,
+    },
+    getOutBusFromHouse: {
+        type: Boolean,
+        required: true,
+    },
+    getOnBusFromSchool: {
+        type: Boolean,
+        required: true,
+    },
+    getOutBusFromSchool:{
+        type: Boolean,
+        required: true,
+    },
+    
+    otherRequirement: {
+        type: Date,
         required: true,
     }
-
 })
 
 var RegisterBus = mongoose.model('RegisterBus', registerBusSchema);

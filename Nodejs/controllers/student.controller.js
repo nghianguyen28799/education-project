@@ -21,7 +21,7 @@ module.exports = {
             parentsCode: req.body.parentsCode,
             avatar: '',
             joined: req.body.joined,
-            attendanceStatus: "",
+            attendanceStatus: new Date(new Date().setDate(new Date().getDate()-1)),
             attendanceStatus: false
         }
         await Student.create(data)
@@ -37,7 +37,7 @@ module.exports = {
         const condition = {
             _id: req.body.id
         }
-        console.log(req.body);
+        // console.log(req.body);
         const action = {
             name: req.body.name,
             birthday: req.body.birthday,
@@ -142,5 +142,12 @@ module.exports = {
         }).catch(error => {
             res.send({error: error})
         })   
+    },
+
+    defaultPicture: async(req, res) => {
+        Student.updateOne({ _id: req.body.id }, {avatar: ''})
+        .then(() => {
+            res.send({ success: true})
+        })
     }
 }

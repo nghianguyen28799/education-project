@@ -24,7 +24,6 @@ module.exports = {
     },
 
     remove: async(req, res) => {
-        console.log(req.body.id);
         Bus.deleteOne({ _id: req.body.id })
         .then(() => {
             res.sendStatus(200)
@@ -34,7 +33,6 @@ module.exports = {
     show: async(req, res) => {
         Bus.find()
         .then(data => {
-            console.log(data);
             res.send(data)
         })     
     },
@@ -43,6 +41,14 @@ module.exports = {
         Bus.find()
         .then(data => {
             res.send(data)
+        })
+    },
+
+    getDataById: async(req, res) => {
+        const id = req.body.id;
+        Bus.findOne({ supervisorId: id })
+        .then(data => {
+            res.send(data);
         })
     }
 }

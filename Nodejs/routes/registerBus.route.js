@@ -11,4 +11,10 @@ Router.post('/attendance', controller.attendance)
 
 Router.post('/showAllList', controller.showAllList)
 
+Router.post('/updateDate', controller.updateDate)
+
+Router.post('/sendRequire', controller.sendRequire)
+
+Router.post('/showByIdAndDate', controller.showByIdAndDate)
+
 module.exports = Router;

@@ -13,4 +13,6 @@ Router.post('/show', controller.show);
 
 Router.get('/getData', controller.getData);
 
+Router.post('/getDataById', controller.getDataById);
+
 module.exports = Router;

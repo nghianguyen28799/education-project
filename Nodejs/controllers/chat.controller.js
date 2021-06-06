@@ -12,7 +12,8 @@ module.exports = {
             }).then(() => {
                 res.json({create: true})
             })
-        }
+        } 
+        res.sendStatus(200);
     },
 
     showMessages: async(req, res) => {
@@ -33,4 +34,19 @@ module.exports = {
         })
         res.send(userList)
     },
+
+    addMessage: async (req, res) => {
+        const { room, message } = req.body;
+
+        Chat.findOne({ room: room })
+        .then(data => {
+            const { messages } = data;
+            messages.unshift(message);
+            const newMessages = messages
+            const condition = {room: room}
+            const handler = { messages: newMessages }
+            Chat.updateOne(condition, handler)
+            .then(() => {})
+        })
+    }
 }

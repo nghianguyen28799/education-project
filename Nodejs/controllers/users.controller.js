@@ -215,4 +215,10 @@ module.exports = {
         }
     },
 
+    defaultPicture: async(req, res) => {
+        User.updateOne({ _id: req.body.id }, {avatar: ''})
+        .then(() => {
+            res.send({ success: true})
+        })
+    }
 }

@@ -39,6 +39,8 @@ Router.post('/changeAvatarParents', uploadUser.single('photo'), controller.chang
 
 Router.post('/changePasswordParents', controller.changePasswordParents)
 
+Router.post('/defaultPicture', controller.defaultPicture)
+
 Router.get("/", controller.showUsers)
 
 module.exports = Router;

@@ -9,4 +9,6 @@ Router.post('/showMessages', controller.showMessages)
 
 Router.post('/showUserList', controller.showUserList)
 
+Router.post('/addMessage', controller.addMessage)
+
 module.exports = Router;

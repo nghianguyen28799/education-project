@@ -11,4 +11,6 @@ Router.post('/pushNotification', controller.pushNotification)
 
 Router.post('/editStatus', controller.editStatus)
 
+Router.post('/editConfirm', controller.editConfirm)
+
 module.exports = Router;

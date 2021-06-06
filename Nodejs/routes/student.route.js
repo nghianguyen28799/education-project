@@ -37,4 +37,6 @@ Router.post('/getAttendanceSuccessly', controller.getAttendanceSuccessly)
 
 Router.post('/changeStudentAvatar',  uploadUser.single('photo'), controller.changeStudentAvatar)
 
+Router.post('/defaultPicture', controller.defaultPicture)
+
 module.exports = Router;
