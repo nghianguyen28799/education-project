@@ -13,14 +13,14 @@ const addUser = ({ id, name, room }) => {
     const user = { id, name, room };
 
     users.push(user);
-    console.log(users);
+    // console.log(users);
     return { user }
 }
 
 const removeUser = ({id}) => {
     // console.log('name: ' + name);
     // console.log('room: ' + room);
-    console.log('id: ' + id);
+    // console.log('id: ' + id);
     const index = users.findIndex((user) => user.id === id);
   
     if(index !== -1) return users.splice(index, 1)[0];

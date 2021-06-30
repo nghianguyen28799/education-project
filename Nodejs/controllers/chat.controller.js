@@ -46,7 +46,7 @@ module.exports = {
             const condition = {room: room}
             const handler = { messages: newMessages }
             Chat.updateOne(condition, handler)
-            .then(() => {})
+            .then(() => res.sendStatus(200))
         })
     }
 }
